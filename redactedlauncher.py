@@ -6,13 +6,14 @@ import subprocess
 import sys
 import getpass as gp
 from hashlib import sha256
+from tkinter import simpledialog
 ######################################
 #        [REDACTED] Launcher         #
 # By James King (Github: JamesK2754) #
 #            MIT Licence             #
 ######################################
 
-version = "1.0.0"
+version = "1.1"
 
 def encryptpwd(pwd):
     pwd = str(pwd).encode("utf-8")
@@ -23,15 +24,28 @@ def encryptpwd(pwd):
     return pwd
 
 if os.path.exists(".secure.txt") == False:
+    parent = tk.Tk()
+    parent.title("[REDACTED] Launcer - Boot checker")
+    parentlabel = tk.Label(parent, text="Just ignore this", font="none 20 italic")
+    parentlabel.pack(anchor="center", padx=5, pady=3)
     print("Error, .secure.txt file was not found.")
-    messagebox.showerror("Error", "The password storage file could not be found. Redacted Launcher has regenerated that file, please enter the command line terminal to reenter your password.")
-    pwd = gp.getpass("Password: ")
+    messagebox.showerror("Error", "The password storage file could not be found. Redacted Launcher has regenerated that file, please enter your password on the next prompt.")
+    pwd = simpledialog.askstring("Password entry", "Please enter your [R]L password. If you have already setup this instance make sure the password is the same to enable location decryption.")
+    parent.destroy()
+    parent.mainloop()
     file = open(".secure.txt", "w")
     file.write(encryptpwd(pwd))
     file.close()
+
 if os.path.exists(".secure_2.txt") == False:
+    parent = tk.Tk()
+    parent.title("[REDACTED] Launcer - Boot checker")
+    parentlabel = tk.Label(parent, text="Just ignore this", font="none 20 italic")
+    parentlabel.pack(anchor="center", padx=5, pady=3)
     print("Error, .secure_2.txt was not found.")
     messagebox.showerror("Error", "The app location storage file was not found. Redacted launcher has regenerated the file, but the locations could not be loaded.")
+    parent.destroy()
+    parent.mainloop()
     file = open(".secure_2.txt", "w")
     file.write("")
     file.close()
@@ -59,7 +73,7 @@ def outerloop():
         mainscreenleft.pack(fill="both", side="left", padx=5, pady=3)
 
         itemlist = tk.Listbox(mainscreenright)
-        itemlist.grid(row=1, column=4, rowspan=8, columnspan=3)
+        itemlist.grid(row=1, column=4, rowspan=9, columnspan=3)
         for x in range(len(listfileconts)):
             selectedtoinsertolist = listfileconts[x]
             selectedtoinsertolist = selectedtoinsertolist.split("|")
@@ -82,8 +96,11 @@ def outerloop():
                 workdir = workdir.split("/")
                 #/{workdir[1]}/{workdir[2]}
                 subprocess.call([opener, f"{selected_app}"])
+        def openpressenter(self):
+            openpressed()
+        appwide.bind('<Return>', openpressenter)
         openbutt = tk.Button(mainscreenleft, text="Open", command=openpressed)
-        openbutt.grid(row=1, column=1, rowspan=1, columnspan=2)
+        openbutt.grid(row=1, column=1, rowspan=1, columnspan=2, sticky="nesw")
 
         def addpressed():
             pwdpop = tk.Tk()
@@ -104,8 +121,8 @@ def outerloop():
                 hiddenloc = ""
                 for i in locationholdlist:
                     hiddenloc += str(i) + "/"
-                os.rename(locationentry, hiddenloc)
                 listfile = open(".secure_2.txt", "a+")
+                os.rename(locationentry, hiddenloc)
                 appname = appnameentry.get()
                 listfile.write(f"\n\"{appname}\"|\"{hiddenloc}\"")
                 listfile.close()
@@ -115,9 +132,9 @@ def outerloop():
                 outerloop()
             appnameentry.grid(row=1, column=2)
             locationentrybutton = tk.Button(popframe, text="Select app and save", command=selectapplocation)
-            locationentrybutton.grid(row=2, column=2)
+            locationentrybutton.grid(row=2, column=2, sticky="nesw")
         addbutt = tk.Button(mainscreenleft, text="Add", command=addpressed)
-        addbutt.grid(row=2, column=1, rowspan=1, columnspan=2)
+        addbutt.grid(row=2, column=1, rowspan=1, columnspan=2, sticky="nesw")
 
         def deletepressed():
             selected_app_ = itemlist.get(itemlist.curselection())
@@ -139,7 +156,7 @@ def outerloop():
             appwide.destroy()
             outerloop()
         delbutt = tk.Button(mainscreenleft, text="Delete", command=deletepressed)
-        delbutt.grid(row=3, column=1, rowspan=1, columnspan=2)
+        delbutt.grid(row=3, column=1, rowspan=1, columnspan=2, sticky="nesw")
 
         def chngpwdpress():
             pwdpop = tk.Tk()
@@ -175,14 +192,14 @@ def outerloop():
             cancbuttpwd = tk.Button(popframe, text="Cancel", command=changepasswordcancel)
             orgpass.grid(row=1, column=2, rowspan=1, columnspan=2)
             newpass1.grid(row=2,column=2, rowspan=1, columnspan=2)
-            enterbutt.grid(row=4, column=2)
-            cancbuttpwd.grid(row=4, column=1)
+            enterbutt.grid(row=4, column=2, sticky="nesw")
+            cancbuttpwd.grid(row=4, column=1, sticky="nesw")
             newpass2.grid(row=3, column=2, rowspan=1, columnspan=2)
             orgpasstitle.grid(row=1, column=1)
             newpass1title.grid(row=2, column=1)
             newpass2title.grid(row=3, column=1)
         chngepwdbutt = tk.Button(mainscreenleft, text="Change password", command=chngpwdpress)
-        chngepwdbutt.grid(row=4, column=1, rowspan=1, columnspan=2)
+        chngepwdbutt.grid(row=4, column=1, rowspan=1, columnspan=2, sticky="nesw")
 
         def aboutpressed():
             aboutwin = tk.Tk()
@@ -221,7 +238,7 @@ def outerloop():
                 except:
                     messagebox.showerror("Error", "Something went wrong. Maybe check the location of the import file.")
             importbutton = tk.Button(aboutleftframe, text="Import app locations", command=importpressed)
-            importbutton.grid(row=6, column=1)
+            importbutton.grid(row=6, column=1, sticky="nesw")
             def exportpressed():
                 messagebox.showwarning("Heads up!", "App locations will be exported to a plain text file, unencrypted. Keep this is mind when exporting. We reccomend deleting the file as soon as it is imported.")
                 file = open(".secure_2.txt", "r")
@@ -233,20 +250,20 @@ def outerloop():
                 file.close()
                 messagebox.showwarning("Heads up!", "Export complete.")
             exportbutton = tk.Button(aboutleftframe, text="Export app locations", command=exportpressed)
-            exportbutton.grid(row=7, column=1)
+            exportbutton.grid(row=7, column=1, sticky="nesw")
         aboutbutt = tk.Button(mainscreenleft, text="About", command=aboutpressed)
-        aboutbutt.grid(row=5, column=1, rowspan=1, columnspan=2)
+        aboutbutt.grid(row=5, column=1, rowspan=1, columnspan=2, sticky="nesw")
 
         def logoutpressed():
             appwide.destroy()
             outerloop()
         logoutbutt = tk.Button(mainscreenleft, text="Logout", command=logoutpressed)
-        logoutbutt.grid(row=6, column=1, rowspan=1, columnspan=2)
+        logoutbutt.grid(row=6, column=1, rowspan=1, columnspan=2, sticky="nesw")
 
         def exitpress():
             exit()
         exitbutt = tk.Button(mainscreenleft, text="Exit", command=exitpress)
-        exitbutt.grid(row=7, column=1, rowspan=1, columnspan=2)
+        exitbutt.grid(row=7, column=1, rowspan=1, columnspan=2, sticky="nesw")
 
 
 
