@@ -5,8 +5,8 @@
 <br>
   <b>Coming soon</b>
   <ul>
-    <li>App list file encryption</li>
-    <li>Executable for Linux</li>
+    <li><strike>App list file encryption</strike></li>
+    <li><strike>Executable for Linux</strike></li>
     <li>executable and .dmg for macOS</li>
   </ul>
 </body>
